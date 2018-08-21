@@ -13,6 +13,7 @@ namespace AMC {
     public:
         JInstruction(uint8_t t_opcode, uint32_t t_address);
         JInstruction(uint32_t t_ins);
+        ~JInstruction() override;
 
         uint8_t opcode() const;
         uint32_t address() const;

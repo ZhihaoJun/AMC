@@ -8,10 +8,11 @@
 #include "RInstruction.h"
 
 namespace AMC {
-    class ADDInstruction : RInstruction {
+    class ADDInstruction : public RInstruction {
     public:
         ADDInstruction(uint8_t t_rs, uint8_t t_rt, uint8_t t_rd);
         ADDInstruction(uint32_t t_ins);
+        ~ADDInstruction() override;
 
         uint32_t instruction() const override;
     };

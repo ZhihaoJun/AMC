@@ -2,7 +2,7 @@
 // Created by January on 8/21/2018.
 //
 
-#include "../../include/commands/IInstruction.h"
+#include "../../include/instructions/IInstruction.h"
 
 uint16_t AMC::IInstruction::immediate() const {
     return m_immediate;
@@ -32,3 +32,5 @@ AMC::IInstruction::IInstruction(uint32_t t_ins) :
 uint32_t AMC::IInstruction::instruction() const {
     return m_ins;
 }
+
+AMC::IInstruction::~IInstruction() = default;

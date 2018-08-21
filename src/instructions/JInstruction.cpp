@@ -2,7 +2,7 @@
 // Created by January on 8/21/2018.
 //
 
-#include "../../include/commands/JInstruction.h"
+#include "../../include/instructions/JInstruction.h"
 
 uint8_t AMC::JInstruction::opcode() const {
     return m_opcode;
@@ -22,3 +22,5 @@ AMC::JInstruction::JInstruction(uint32_t t_ins) :
 uint32_t AMC::JInstruction::instruction() const {
     return m_ins;
 }
+
+AMC::JInstruction::~JInstruction() = default;

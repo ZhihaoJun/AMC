@@ -13,7 +13,7 @@ namespace AMC {
     public:
         RInstruction(uint8_t t_opcode, uint8_t t_rs, uint8_t t_rt, uint8_t t_rd, uint8_t t_shamt, uint8_t t_funct);
         RInstruction(uint32_t t_ins);
-        virtual ~RInstruction() = 0;
+        ~RInstruction() override;
 
         uint8_t opcode() const;
         uint8_t rs() const;

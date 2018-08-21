@@ -2,7 +2,7 @@
 // Created by January on 8/21/2018.
 //
 
-#include "../../include/commands/RInstruction.h"
+#include "../../include/instructions/RInstruction.h"
 
 AMC::RInstruction::RInstruction(uint8_t t_opcode, uint8_t t_rs, uint8_t t_rt, uint8_t t_rd, uint8_t t_shamt, uint8_t t_funct) :
     m_opcode(t_opcode), m_rs(t_rs), m_rt(t_rt), m_rd(t_rd), m_shamt(t_shamt), m_funct(t_funct),
@@ -41,3 +41,5 @@ uint8_t AMC::RInstruction::funct() const {
 uint32_t AMC::RInstruction::instruction() const {
     return m_ins;
 }
+
+AMC::RInstruction::~RInstruction() = default;

@@ -9,7 +9,8 @@
 
 namespace AMC {
     class MIPSInstruction {
-        virtual ~MIPSInstruction() = 0;
+    public:
+        virtual ~MIPSInstruction();
         virtual uint32_t instruction() const = 0;
     };
 }
