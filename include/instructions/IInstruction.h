@@ -9,7 +9,7 @@
 #include "MIPSInstruction.h"
 
 namespace AMC {
-    class IInstruction : MIPSInstruction {
+    class IInstruction : public MIPSInstruction {
     public:
         IInstruction(uint8_t t_opcode, uint8_t t_rs, uint8_t t_rt, uint16_t t_immediate);
         IInstruction(uint32_t t_ins);

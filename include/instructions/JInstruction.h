@@ -9,7 +9,7 @@
 #include "MIPSInstruction.h"
 
 namespace AMC {
-    class JInstruction : MIPSInstruction {
+    class JInstruction : public MIPSInstruction {
     public:
         JInstruction(uint8_t t_opcode, uint32_t t_address);
         JInstruction(uint32_t t_ins);
