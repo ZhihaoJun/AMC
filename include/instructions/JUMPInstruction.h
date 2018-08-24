@@ -8,9 +8,9 @@
 #include "JInstruction.h"
 
 namespace AMC {
-    class JumpInstruction : public JInstruction {
+    class JUMPInstruction : public JInstruction {
     public:
-        JumpInstruction(uint32_t t_ins);
+        JUMPInstruction(uint32_t t_ins);
 
         uint32_t instruction() const override;
     };

@@ -9,7 +9,7 @@
 #include "IInstruction.h"
 
 namespace AMC {
-    class ADDIInstruction : IInstruction {
+    class ADDIInstruction : public IInstruction {
     public:
         ADDIInstruction(uint32_t t_ins);
         ADDIInstruction(uint8_t t_rs, uint8_t t_rt, uint16_t t_immediate);

@@ -12,6 +12,8 @@ namespace AMC {
     public:
         JRInstruction(uint8_t t_rs);
         JRInstruction(uint32_t t_ins);
+
+        uint32_t instruction() const override;
     };
 }
 
