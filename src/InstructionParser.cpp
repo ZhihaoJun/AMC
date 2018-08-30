@@ -17,6 +17,7 @@
 #include <instructions/MFLOInstruction.h>
 #include <instructions/BEQInstruction.h>
 #include <instructions/JUMPInstruction.h>
+#include <InvalidInstructionException.h>
 #include "InstructionParser.h"
 #include "instructions/SUBInstruction.h"
 
@@ -44,7 +45,7 @@ std::unique_ptr<AMC::MIPSInstruction> AMC::InstructionParser::parse(uint32_t t_i
                 raw = static_cast<AMC::MIPSInstruction *>(new MFLOInstruction(t_ins));
                 break;
             default:
-                std::cout << "[InstructionParser.parse] no such funct for instruction: " << std::hex << "0x" << t_ins << std::dec << std::endl;
+                throw InvalidInstructionException(t_ins, InvalidInstructionException::Funct);
         }
     } else if (opcode == 0xDU) { // ORI instruction
         raw = static_cast<AMC::MIPSInstruction *>(new ORIInstruction(t_ins));
@@ -67,7 +68,7 @@ std::unique_ptr<AMC::MIPSInstruction> AMC::InstructionParser::parse(uint32_t t_i
     } else if (opcode == 0x2U) { // JUMP instruction
         raw = static_cast<AMC::MIPSInstruction *>(new JUMPInstruction(t_ins));
     } else {
-        std::cout << "[InstructionParser.parse] no such opcode for instruction: " << std::hex << "0x" << t_ins << std::dec << std::endl;
+        throw InvalidInstructionException(t_ins, InvalidInstructionException::Opcode);
     }
     return std::unique_ptr<AMC::MIPSInstruction>(raw);
 }

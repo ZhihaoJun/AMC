@@ -10,6 +10,9 @@
 #include <instructions/ORIInstruction.h>
 #include <ProgramTerminateException.h>
 #include <InstructionNotSupportedExeception.h>
+#include <InvalidInstructionException.h>
+#include <chrono>
+#include <Timer.h>
 #include "Util.h"
 
 static auto parentPath = apathy::Path(__FILE__).parent();
@@ -80,13 +83,17 @@ TEST(CPU, loadSimpleLoopAndExecute) {
     AMC::Util::loadFile(ram, 0x0U, code.string());
     AMC::CPU cpu(0x0U, 0x2400U, 0x2000U, ram);
 
+    AMC::Timer timer;
     while (true) {
         try {
             cpu.tick();
-        } catch (const AMC::ProgramTerminateException &) {
+        } catch (const AMC::ProgramTerminateException &e) {
             break;
         } catch (const AMC::InstructionNotSupportedExeception &) {
             // do nothing
+        } catch (const AMC::InvalidInstructionException &e) {
+            throw e;
         }
     }
+    std::cout << "elapsed " << timer.elapsedMilli() << " ms" << std::endl;
 }

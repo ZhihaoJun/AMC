@@ -14,6 +14,8 @@
 #include <instructions/ADDIInstruction.h>
 #include <instructions/MFHIInstruction.h>
 #include <instructions/MFLOInstruction.h>
+#include <instructions/DIVInstruction.h>
+#include <InvalidInstructionException.h>
 
 #include "ProgramTerminateException.h"
 #include "InstructionNotSupportedExeception.h"
@@ -23,6 +25,7 @@
 #include "instructions/SyscallInstruction.h"
 #include "Util.h"
 #include "instructions/SUBInstruction.h"
+#include "instructions/MULTInstruction.h"
 
 namespace AMC {
     uint64_t CPU::readRegister(int id) const {
@@ -38,7 +41,8 @@ namespace AMC {
 
             int32_t result = (int32_t) reg(src) + (int32_t) reg(dst);
             reg(dst) = (uint32_t) result;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(ADDIInstruction)) {
             auto typed = dynamic_cast<const ADDIInstruction &>(cmd);
             auto dst = typed.rt();
@@ -47,7 +51,8 @@ namespace AMC {
 
             int32_t result = (int32_t) reg(src) + (int16_t) immediate;
             reg(dst) = (uint32_t)result;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(ADDIUInstruction)) {
             auto typed = dynamic_cast<const ADDIUInstruction &>(cmd);
             auto dst = typed.rt();
@@ -56,7 +61,8 @@ namespace AMC {
 
             uint32_t result = (uint32_t) reg(src) + immediate;
             reg(dst) = result;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(SUBInstruction)) {
             auto typed = dynamic_cast<const SUBInstruction &>(cmd);
             auto dst = typed.rd();
@@ -64,13 +70,37 @@ namespace AMC {
             auto rt = typed.rt();
 
             int32_t result = (int32_t) reg(src) - (int32_t) reg(rt);
-            reg(dst) = (uint32_t)result;
-            advanceCP(ALIGN_BYTES);
+            reg(dst) = (uint32_t) result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(DIVInstruction)) {
+            auto typed = dynamic_cast<const DIVInstruction &>(cmd);
+            auto dst = typed.rt();
+            auto src = typed.rs();
+
+            auto srcInt = (int32_t) reg(src);
+            auto dstInt = (int32_t) reg(dst);
+
+            int32_t lo = srcInt / dstInt;
+            int32_t hi = srcInt % dstInt;
+            m_hi = (uint32_t) hi;
+            m_lo = (uint32_t) lo;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(MULTInstruction)) {
+            auto typed = dynamic_cast<const MULTInstruction &>(cmd);
+            auto dst = typed.rt();
+            auto src = typed.rs();
+
+            uint32_t result = (uint32_t)reg(src) * (uint32_t)reg(dst);
+            m_lo = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(JUMPInstruction)) {
             auto typed = dynamic_cast<const JUMPInstruction&>(cmd);
             uint32_t target = typed.address();
-            m_pc = (m_pc & 0xF0000000U) | (target << 2U);
-            m_npc = m_pc + ALIGN_BYTES;
+
+            m_npc = (m_pc & 0xF0000000U) | (target << 2U);
         } else if (typeid(cmd) == typeid(SyscallInstruction)) {
             auto typed = dynamic_cast<const SyscallInstruction &>(cmd);
             auto callId = reg(REGISTER_V0);
@@ -96,7 +126,8 @@ namespace AMC {
                     std::cout << "No such system call: " << callId << std::endl;
                     break;
             }
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(ORIInstruction)) {
             auto typed = dynamic_cast<const ORIInstruction &>(cmd);
             auto dst = typed.rt();
@@ -105,7 +136,8 @@ namespace AMC {
 
             uint32_t result = (uint32_t)reg(src) | immediate;
             reg(dst) = result;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(BEQInstruction)) {
             auto typed = dynamic_cast<const BEQInstruction &>(cmd);
             auto src = typed.rs();
@@ -114,28 +146,32 @@ namespace AMC {
             auto advance = ALIGN_BYTES;
 
             if (reg(src) == reg(dst)) {
-                advance = offset << 2U;
+                advance = (offset+1U) << 2U;
             }
-            advanceCP(advance);
+
+            m_npc = m_pc + advance;
         } else if (typeid(cmd) == typeid(MFHIInstruction)) {
             auto typed = dynamic_cast<const MFHIInstruction &>(cmd);
             auto dst = typed.rd();
 
             reg(dst) = m_hi;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(MFLOInstruction)) {
             auto typed = dynamic_cast<const MFLOInstruction &>(cmd);
             auto dst = typed.rd();
 
             reg(dst) = m_lo;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(LUIInstruction)) {
             auto typed = dynamic_cast<const LUIInstruction &>(cmd);
             auto dst = typed.rt();
             auto immediate = typed.immediate();
 
             reg(dst) = immediate << 16U;
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(LBInstruction)) {
             auto typed = dynamic_cast<const LBInstruction &>(cmd);
             auto src = typed.rs();
@@ -144,7 +180,8 @@ namespace AMC {
 
             auto address = reg(src) + offset;
             reg(dst) = m_ram.get(address);
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(SBInstruction)) {
             auto typed = dynamic_cast<const SBInstruction &>(cmd);
             auto src = typed.rs();
@@ -153,7 +190,8 @@ namespace AMC {
 
             auto address = reg(src) + offset;
             m_ram.set(address, (uint8_t) (reg(dst) & 0xFFU));
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(LWInstruction)) {
             auto typed = dynamic_cast<const LWInstruction &>(cmd);
             auto src = typed.rs();
@@ -162,7 +200,8 @@ namespace AMC {
 
             auto address = reg(src) + offset;
             reg(dst) = Util::loadWord(m_ram, address);
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(SWInstruction)) {
             auto typed = dynamic_cast<const SWInstruction &>(cmd);
             auto src = typed.rs();
@@ -171,12 +210,14 @@ namespace AMC {
 
             auto address = reg(src) + offset;
             Util::storeWord(m_ram, address, (uint32_t) reg(dst));
-            advanceCP(ALIGN_BYTES);
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else {
             uint32_t ins = cmd.instruction();
             std::cout << "instruction not supported: " << std::hex << "0x" << ins << std::dec << std::endl;
             throw InstructionNotSupportedExeception(ins);
         }
+        m_pc = m_npc;
     }
 
     inline void CPU::advanceCP(uint32_t offset) {
@@ -194,8 +235,21 @@ namespace AMC {
 
     void CPU::tick() {
         uint32_t ins = getInstruction(m_pc);
-        auto instruction = m_parser->parse(ins);
-        execute(*instruction);
+
+        try {
+            auto instruction = m_parser->parse(ins);
+            execute(*instruction);
+        } catch (const InvalidInstructionException &e) {
+            switch (e.invalidType()) {
+                case InvalidInstructionException::Opcode:
+                    std::cout << "[CPU.tick] invalid opcode instruction at " << std::hex << "0x" << m_pc << " : 0x" << e.instruction() << std::dec << std::endl;
+                    break;
+                case InvalidInstructionException::Funct:
+                    std::cout << "[CPU.tick] invalid funct instruction at " << std::hex << "0x" << m_pc << " : 0x" << e.instruction() << std::dec << std::endl;
+                    break;
+            }
+            throw e;
+        }
     }
 
     uint32_t CPU::npc() const {
