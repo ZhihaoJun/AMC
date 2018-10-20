@@ -5,7 +5,7 @@
 #ifndef AMC_ADDIINSTRUCTION_H
 #define AMC_ADDIINSTRUCTION_H
 
-#include <stdint-gcc.h>
+#include <cstdint>
 #include "IInstruction.h"
 
 namespace AMC {
