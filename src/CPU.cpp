@@ -16,6 +16,8 @@
 #include <instructions/MFLOInstruction.h>
 #include <instructions/DIVInstruction.h>
 #include <InvalidInstructionException.h>
+#include <instructions/ADDUInstruction.h>
+#include <instructions/ANDInstruction.h>
 
 #include "ProgramTerminateException.h"
 #include "InstructionNotSupportedExeception.h"
@@ -39,7 +41,7 @@ namespace AMC {
             auto src = typed.rs();
             auto rt = typed.rt();
 
-            int32_t result = (int32_t) reg(src) + (int32_t) reg(dst);
+            int32_t result = (int32_t) reg(src) + (int32_t) reg(rt);
             reg(dst) = (uint32_t) result;
 
             m_npc = m_pc + ALIGN_BYTES;
@@ -60,6 +62,16 @@ namespace AMC {
             auto immediate = typed.immediate();
 
             uint32_t result = (uint32_t) reg(src) + immediate;
+            reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(ADDUInstruction)) {
+            auto typed = dynamic_cast<const ADDUInstruction &>(cmd);
+            auto rt = typed.rt();
+            auto src = typed.rs();
+            auto dst = typed.rd();
+
+            uint32_t result = (uint32_t) reg(src) + (uint32_t)reg(rt);
             reg(dst) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
@@ -134,7 +146,17 @@ namespace AMC {
             auto src = typed.rs();
             auto immediate = typed.immediate();
 
-            uint32_t result = (uint32_t)reg(src) | immediate;
+            uint32_t result = (uint32_t) reg(src) | immediate;
+            reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(ANDInstruction)) {
+            auto typed = dynamic_cast<const ANDInstruction &>(cmd);
+            auto dst = typed.rd();
+            auto src = typed.rs();
+            auto rt = typed.rt();
+
+            uint32_t result = (uint32_t) reg(src) & (uint32_t) reg(rt);
             reg(dst) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
