@@ -8,10 +8,11 @@
 #include "MIPSInstruction.h"
 
 namespace AMC {
-    class NullInstruction : MIPSInstruction {
+    class NOOPInstruction : public MIPSInstruction {
     public:
-        ~NullInstruction() override {}
-        uint32_t instruction() const override { return 0U; }
+        NOOPInstruction();
+        ~NOOPInstruction() override;
+        uint32_t instruction() const override;
     };
 }
 

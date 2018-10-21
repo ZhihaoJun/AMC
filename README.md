@@ -22,7 +22,7 @@ Just for fun.
 |    BLTZ     |             |        |           |
 |   BLTZAL    |             |        |           |
 |     BNE     |             |        |           |
-|     DIV     |      √      |        |     √     |
+|     DIV     |      √      |   √    |     √     |
 |    DIVU     |             |        |           |
 |      J      |      √      |   √    |     √     |
 |     JAL     |             |        |           |
@@ -32,9 +32,9 @@ Just for fun.
 |     LW      |      √      |   √    |     √     |
 |    MFHI     |      √      |   √    |     √     |
 |    MFLO     |      √      |   √    |     √     |
-|    MULT     |      √      |        |     √     |
+|    MULT     |      √      |   √    |     √     |
 |    MULTU    |             |        |           |
-|    NOOP     |             |        |           |
+|    NOOP     |      √      |   √    |     √     |
 |     OR      |             |        |           |
 |     ORI     |      √      |   √    |     √     |
 |     SB      |      √      |   √    |     √     |

@@ -12,7 +12,7 @@ file(GLOB AMCInstructionsInclude "src/instructions/*.h")
 file(GLOB AMCSrc "src/*.cpp")
 file(GLOB AMCInclude "include/*.h")
 
-add_library(AMC ${AMCSrc} ${AMCInstructionsSrc} src/instructions/ADDUInstruction.cpp include/instructions/ADDUInstruction.h src/instructions/ANDInstruction.cpp include/instructions/ANDInstruction.h src/instructions/ANDIInstruction.cpp include/instructions/ANDIInstruction.h src/instructions/BGEZInstruction.cpp include/instructions/BGEZInstruction.h)
+add_library(AMC ${AMCSrc} ${AMCInstructionsSrc} ${AMCInstructionInclude})
 add_executable(AMCMain main.cpp ${AMCSrc} ${AMCInclude} ${AMCInstructionsSrc} ${AMCInstructionsInclude})
 add_executable(UnitTest test/test.cpp test/instructions.cpp test/cpu.cpp test/format.cpp test/util.cpp)
 target_link_libraries(UnitTest gtest_main gtest AMC)
