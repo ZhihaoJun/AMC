@@ -7,7 +7,6 @@
 
 #include <instructions/IInstruction.h>
 #include <cstdint>
-#include <stdint-gcc.h>
 
 namespace AMC {
     class LUIInstruction : public IInstruction {

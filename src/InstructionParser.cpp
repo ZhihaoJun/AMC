@@ -2,38 +2,32 @@
 // Created by January on 8/22/2018.
 //
 
-#include <instructions/ADDInstruction.h>
-#include <iostream>
-#include <instructions/SyscallInstruction.h>
-#include <instructions/ORIInstruction.h>
-#include <instructions/LBInstruction.h>
-#include <instructions/LWInstruction.h>
-#include <instructions/SBInstruction.h>
-#include <instructions/SWInstruction.h>
-#include <instructions/ADDIUInstruction.h>
-#include <instructions/LUIInstruction.h>
-#include <instructions/ADDIInstruction.h>
-#include <instructions/MFHIInstruction.h>
-#include <instructions/MFLOInstruction.h>
-#include <instructions/BEQInstruction.h>
-#include <instructions/JUMPInstruction.h>
-#include <InvalidInstructionException.h>
 #include "InstructionParser.h"
-#include "instructions/SUBInstruction.h"
+
+#include <iostream>
+#include <InvalidInstructionException.h>
+#include "instructions/all.h"
 
 std::unique_ptr<AMC::MIPSInstruction> AMC::InstructionParser::parse(uint32_t t_ins) {
     auto opcode = (uint8_t)((t_ins >> 26U) & 0x3FU);
     auto funct = (uint8_t)(t_ins & 0x3FU);
 
     AMC::MIPSInstruction *raw = nullptr;
-    // R instruction
-    if (opcode == 0x0U) {
+    if (t_ins == 0U) { // NOOP instruction
+        raw = static_cast<AMC::MIPSInstruction *>(new NOOPInstruction());
+    } else if (opcode == 0x0U) { // R instruction
         switch (funct) {
             case 0x20U: // ADD instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new ADDInstruction(t_ins));
                 break;
             case 0x22U: // SUB instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new SUBInstruction(t_ins));
+                break;
+            case 0x1AU: // DIV instruction
+                raw = static_cast<AMC::MIPSInstruction *>(new DIVInstruction(t_ins));
+                break;
+            case 0x18U: // MULT instruction
+                raw = static_cast<AMC::MIPSInstruction *>(new MULTInstruction(t_ins));
                 break;
             case 0xCU: // Syscall instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new SyscallInstruction(t_ins));

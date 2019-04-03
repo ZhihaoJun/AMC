@@ -11,7 +11,7 @@ file(GLOB AMCInstructionsInclude "src/instructions/*.h")
 file(GLOB AMCSrc "src/*.cpp")
 file(GLOB AMCInclude "include/*.h")
 
-add_library(AMC ${AMCSrc} ${AMCInstructionsSrc})
+add_library(AMC ${AMCSrc} ${AMCInstructionInclude})
 add_executable(AMCMain main.cpp ${AMCSrc} ${AMCInclude} ${AMCInstructionsInclude} src/Timer.cpp include/Timer.h)
 add_executable(UnitTest test/test.cpp test/instructions.cpp test/cpu.cpp test/format.cpp test/util.cpp)
 target_link_libraries(UnitTest gtest_main gtest AMC)

@@ -2,30 +2,14 @@
 // Created by January on 8/21/2018.
 //
 
-#include <iostream>
-#include <instructions/ORIInstruction.h>
-#include <instructions/BEQInstruction.h>
-#include <instructions/LBInstruction.h>
-#include <instructions/SBInstruction.h>
-#include <instructions/LWInstruction.h>
-#include <instructions/SWInstruction.h>
-#include <instructions/ADDIUInstruction.h>
-#include <instructions/LUIInstruction.h>
-#include <instructions/ADDIInstruction.h>
-#include <instructions/MFHIInstruction.h>
-#include <instructions/MFLOInstruction.h>
-#include <instructions/DIVInstruction.h>
-#include <InvalidInstructionException.h>
+#include "CPU.h"
 
+#include <iostream>
+#include <cstdint>
+#include "Util.h"
 #include "ProgramTerminateException.h"
 #include "InstructionNotSupportedExeception.h"
-#include "../include/CPU.h"
-#include "../include/instructions/ADDInstruction.h"
-#include "instructions/JUMPInstruction.h"
-#include "instructions/SyscallInstruction.h"
-#include "Util.h"
-#include "instructions/SUBInstruction.h"
-#include "instructions/MULTInstruction.h"
+#include "InvalidInstructionException.h"
 
 namespace AMC {
     uint64_t CPU::readRegister(int id) const {
@@ -33,13 +17,15 @@ namespace AMC {
     }
 
     void CPU::execute(const MIPSInstruction &cmd) {
-        if (typeid(cmd) == typeid(ADDInstruction)) {
+        if (typeid(cmd) == typeid(NOOPInstruction)) {
+            // do nothing
+        } else if (typeid(cmd) == typeid(ADDInstruction)) {
             auto typed = dynamic_cast<const ADDInstruction &>(cmd);
             auto dst = typed.rd();
             auto src = typed.rs();
             auto rt = typed.rt();
 
-            int32_t result = (int32_t) reg(src) + (int32_t) reg(dst);
+            int32_t result = (int32_t) reg(src) + (int32_t) reg(rt);
             reg(dst) = (uint32_t) result;
 
             m_npc = m_pc + ALIGN_BYTES;
@@ -60,6 +46,16 @@ namespace AMC {
             auto immediate = typed.immediate();
 
             uint32_t result = (uint32_t) reg(src) + immediate;
+            reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(ADDUInstruction)) {
+            auto typed = dynamic_cast<const ADDUInstruction &>(cmd);
+            auto rt = typed.rt();
+            auto src = typed.rs();
+            auto dst = typed.rd();
+
+            uint32_t result = (uint32_t) reg(src) + (uint32_t)reg(rt);
             reg(dst) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
@@ -134,7 +130,17 @@ namespace AMC {
             auto src = typed.rs();
             auto immediate = typed.immediate();
 
-            uint32_t result = (uint32_t)reg(src) | immediate;
+            uint32_t result = (uint32_t) reg(src) | immediate;
+            reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(ANDInstruction)) {
+            auto typed = dynamic_cast<const ANDInstruction &>(cmd);
+            auto dst = typed.rd();
+            auto src = typed.rs();
+            auto rt = typed.rt();
+
+            uint32_t result = (uint32_t) reg(src) & (uint32_t) reg(rt);
             reg(dst) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
