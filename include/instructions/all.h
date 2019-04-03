@@ -17,6 +17,7 @@
 #include "ADDUInstruction.h"
 #include "ANDInstruction.h"
 #include "ANDIInstruction.h"
+#include "XORInstruction.h"
 #include "BEQInstruction.h"
 #include "BGEZInstruction.h"
 #include "DIVInstruction.h"

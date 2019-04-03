@@ -134,6 +134,16 @@ namespace AMC {
             reg(dst) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(XORInstruction)) {
+            auto typed = dynamic_cast<const XORInstruction &>(cmd);
+            auto dst = typed.rd();
+            auto src = typed.rs();
+            auto rt = typed.rt();
+
+            uint32_t result = (uint32_t) reg(src) ^ (uint32_t) reg(rt);
+            reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(ANDInstruction)) {
             auto typed = dynamic_cast<const ANDInstruction &>(cmd);
             auto dst = typed.rd();
@@ -142,6 +152,16 @@ namespace AMC {
 
             uint32_t result = (uint32_t) reg(src) & (uint32_t) reg(rt);
             reg(dst) = result;
+
+            m_npc = m_pc + ALIGN_BYTES;
+        } else if (typeid(cmd) == typeid(ANDIInstruction)) {
+            auto typed = dynamic_cast<const ANDIInstruction &>(cmd);
+            auto src = typed.rs();
+            auto rt = typed.rt();
+            auto immediate = typed.immediate();
+
+            uint32_t result = (uint32_t) reg(src) & immediate;
+            reg(rt) = result;
 
             m_npc = m_pc + ALIGN_BYTES;
         } else if (typeid(cmd) == typeid(BEQInstruction)) {

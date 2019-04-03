@@ -20,8 +20,17 @@ std::unique_ptr<AMC::MIPSInstruction> AMC::InstructionParser::parse(uint32_t t_i
             case 0x20U: // ADD instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new ADDInstruction(t_ins));
                 break;
+            case 0x21U: // ADDU instruction
+                raw = static_cast<AMC::MIPSInstruction *>(new ADDUInstruction(t_ins));
+                break;
             case 0x22U: // SUB instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new SUBInstruction(t_ins));
+                break;
+            case 0x24U: // AND instruction
+                raw = static_cast<AMC::MIPSInstruction *>(new ANDInstruction(t_ins));
+                break;
+            case 0x26U: // XOR instruction
+                raw = static_cast<AMC::MIPSInstruction *>(new XORInstruction(t_ins));
                 break;
             case 0x1AU: // DIV instruction
                 raw = static_cast<AMC::MIPSInstruction *>(new DIVInstruction(t_ins));
@@ -55,6 +64,8 @@ std::unique_ptr<AMC::MIPSInstruction> AMC::InstructionParser::parse(uint32_t t_i
         raw = static_cast<AMC::MIPSInstruction *>(new ADDIInstruction(t_ins));
     } else if (opcode == 0x9U) { // ADDIU instruction
         raw = static_cast<AMC::MIPSInstruction *>(new ADDIUInstruction(t_ins));
+    } else if (opcode == 0xCU) { // ANDI instruction
+        raw = static_cast<AMC::MIPSInstruction *>(new ANDIInstruction(t_ins));
     } else if (opcode == 0xFU) { // LUI instruction
         raw = static_cast<AMC::MIPSInstruction *>(new LUIInstruction(t_ins));
     } else if (opcode == 0x4U) { // BEQ instruction
