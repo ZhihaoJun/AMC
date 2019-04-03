@@ -11,13 +11,23 @@
 namespace AMC {
     class JInstruction : public MIPSInstruction {
     public:
-        JInstruction(uint8_t t_opcode, uint32_t t_address);
-        JInstruction(uint32_t t_ins);
-        ~JInstruction() override;
+        JInstruction(uint8_t t_opcode, uint32_t t_address) :
+                m_opcode(t_opcode), m_address(t_address), m_ins(((t_opcode & 0x3FU) << 26U) | (t_address & 0x3FFFFFFU)) {}
+        JInstruction(uint32_t t_ins) :
+                m_opcode((uint8_t)((t_ins >> 26U) & 0x3FU)), m_address((t_ins) & 0x3FFFFFFU) {}
+        ~JInstruction() override = default;
 
-        uint8_t opcode() const;
-        uint32_t address() const;
-        uint32_t instruction() const override;
+        inline uint8_t opcode() const {
+            return m_opcode;
+        }
+
+        inline uint32_t address() const {
+            return m_address;
+        }
+
+        inline uint32_t instruction() const override {
+            return m_ins;
+        }
 
     private:
         uint8_t m_opcode;

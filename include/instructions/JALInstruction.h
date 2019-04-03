@@ -10,9 +10,8 @@
 namespace AMC {
     class JALInstruction : public JInstruction {
     public:
-        JALInstruction(uint32_t t_ins);
-
-        uint32_t instruction() const override;
+        JALInstruction(uint32_t t_ins) : JInstruction(t_ins) {}
+        ~JALInstruction() override = default;
     };
 }
 

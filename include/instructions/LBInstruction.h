@@ -10,10 +10,9 @@
 namespace AMC {
     class LBInstruction : public IInstruction {
     public:
-        LBInstruction(uint32_t t_ins);
-        LBInstruction(uint8_t t_rs, uint8_t t_rt, uint16_t t_offset);
-
-        uint32_t instruction() const override;
+        LBInstruction(uint32_t t_ins) : IInstruction(t_ins) {}
+        LBInstruction(uint8_t t_rs, uint8_t t_rt, uint16_t t_offset) :
+                IInstruction(0x20U, t_rs, t_rt, t_offset) {}
     };
 }
 

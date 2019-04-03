@@ -10,10 +10,9 @@
 namespace AMC {
     class MULTInstruction : public RInstruction {
     public:
-        MULTInstruction(uint32_t t_ins);
-        MULTInstruction(uint8_t t_rs, uint8_t t_rt);
-
-        uint32_t instruction() const override;
+        MULTInstruction(uint32_t t_ins) : RInstruction(t_ins) {}
+        MULTInstruction(uint8_t t_rs, uint8_t t_rt) :
+                RInstruction(0x0U, t_rs, t_rt, 0x0U, 0x0U, 0x19U) {}
     };
 }
 

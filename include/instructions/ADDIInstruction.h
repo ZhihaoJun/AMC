@@ -11,11 +11,10 @@
 namespace AMC {
     class ADDIInstruction : public IInstruction {
     public:
-        ADDIInstruction(uint32_t t_ins);
-        ADDIInstruction(uint8_t t_rs, uint8_t t_rt, uint16_t t_immediate);
-        ~ADDIInstruction() override;
-
-        uint32_t instruction() const override;
+        ADDIInstruction(uint32_t t_ins) : IInstruction(t_ins) {}
+        ADDIInstruction(uint8_t t_rs, uint8_t t_rt, uint16_t t_immediate) :
+                IInstruction(0x80U, t_rs, t_rt, t_immediate) {}
+        ~ADDIInstruction() override = default;
     };
 }
 

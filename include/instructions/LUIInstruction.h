@@ -12,10 +12,9 @@
 namespace AMC {
     class LUIInstruction : public IInstruction {
     public:
-        LUIInstruction(uint8_t t_rt, uint16_t t_immediate);
-        LUIInstruction(uint32_t t_ins);
-
-        uint32_t instruction() const override;
+        LUIInstruction(uint8_t t_rt, uint16_t t_immediate) :
+                IInstruction(0xFU, 0x0U, t_rt, t_immediate) {}
+        LUIInstruction(uint32_t t_ins) : IInstruction(t_ins) {}
     };
 }
 

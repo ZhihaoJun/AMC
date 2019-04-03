@@ -10,10 +10,9 @@
 namespace AMC {
     class DIVInstruction : public RInstruction {
     public:
-        DIVInstruction(uint32_t t_ins);
-        DIVInstruction(uint8_t t_rs, uint8_t t_rt);
-
-        uint32_t instruction() const override;
+        DIVInstruction(uint32_t t_ins) : RInstruction(t_ins) {}
+        DIVInstruction(uint8_t t_rs, uint8_t t_rt) :
+                RInstruction(0x0U, t_rs, t_rt, 0x0U, 0x0U, 0x1BU) {}
     };
 }
 

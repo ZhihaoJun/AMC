@@ -10,10 +10,9 @@
 namespace AMC {
     class JRInstruction : public RInstruction {
     public:
-        JRInstruction(uint8_t t_rs);
-        JRInstruction(uint32_t t_ins);
-
-        uint32_t instruction() const override;
+        JRInstruction(uint8_t t_rs) :
+                RInstruction(0x0U, t_rs, 0x0U, 0x0U, 0x0U, 0x8U) {}
+        JRInstruction(uint32_t t_ins) : RInstruction(t_ins) {}
     };
 }
 

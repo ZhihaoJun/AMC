@@ -10,10 +10,9 @@
 namespace AMC {
     class MFHIInstruction : public RInstruction {
     public:
-        MFHIInstruction(uint32_t t_ins);
-        MFHIInstruction(uint8_t t_rd);
-
-        uint32_t instruction() const override;
+        MFHIInstruction(uint32_t t_ins) : RInstruction(t_ins) {}
+        MFHIInstruction(uint8_t t_rd) :
+                RInstruction(0x0U, 0x0U, 0x0U, t_rd, 0x0U, 0x10U) {}
     };
 }
 

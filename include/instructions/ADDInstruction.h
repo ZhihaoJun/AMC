@@ -10,11 +10,10 @@
 namespace AMC {
     class ADDInstruction : public RInstruction {
     public:
-        ADDInstruction(uint8_t t_rs, uint8_t t_rt, uint8_t t_rd);
-        ADDInstruction(uint32_t t_ins);
-        ~ADDInstruction() override;
-
-        uint32_t instruction() const override;
+        ADDInstruction(uint8_t t_rs, uint8_t t_rt, uint8_t t_rd) :
+                RInstruction(0x0U, t_rs, t_rt, t_rd, 0x0U, 0x20U) {}
+        ADDInstruction(uint32_t t_ins) : RInstruction(t_ins) {}
+        ~ADDInstruction() override = default;
     };
 }
 
